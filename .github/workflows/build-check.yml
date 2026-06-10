@@ -41,6 +41,6 @@ jobs:
       - name: Build Check
         uses: tauri-apps/tauri-action@v2
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
           args: --no-bundle
