@@ -62,7 +62,7 @@ jobs:
           Write-Host "Set version to $version in package.json and tauri.conf.json"
 
       - name: Build & Publish
-        uses: tauri-apps/tauri-action@v2
+        uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
