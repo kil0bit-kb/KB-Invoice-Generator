@@ -1,6 +1,6 @@
 # KB Invoice Generator
 
-![CI](https://img.shields.io/github/actions/workflow/status/Mohammad-Faiz-Cloud-Engineer/KB-Invoice-Generator/build-check.yml?branch=main&style=flat-square&label=CI)
+![build](https://img.shields.io/github/actions/workflow/status/Mohammad-Faiz-Cloud-Engineer/KB-Invoice-Generator/build-check.yml?branch=main&style=flat-square&label=build)
 ![Version](https://img.shields.io/badge/version-0.1.0-18181b?style=flat-square)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178C6?style=flat-square)
 ![Tauri](https://img.shields.io/badge/Tauri-2-FFC131?style=flat-square)
