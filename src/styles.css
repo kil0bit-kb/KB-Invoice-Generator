@@ -60,20 +60,6 @@ body {
   gap: 0.75rem;
 }
 
-.logo-icon {
-  width: 2.2rem;
-  height: 2.2rem;
-  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-display);
-  font-weight: 800;
-  color: white;
-  font-size: 1.25rem;
-}
-
 .app-title {
   font-family: var(--font-display);
   font-weight: 700;
@@ -353,6 +339,10 @@ body {
   text-align: right !important;
 }
 
+.text-center {
+  text-align: center !important;
+}
+
 .edit-field:hover {
   background: rgba(37, 99, 235, 0.04);
   border-color: rgba(37, 99, 235, 0.3);
@@ -468,28 +458,8 @@ tr:hover .btn-remove-item {
   color: var(--inv-accent);
 }
 
-.t1-company-addr {
-  font-size: 0.85rem;
-  color: var(--inv-text-muted);
-  font-weight: 400;
-  margin-top: 0.5rem;
-}
-
 .t1-invoice-meta-top {
   text-align: right;
-}
-
-.t1-inv-title {
-  font-family: var(--font-display);
-  font-size: 2.2rem;
-  font-weight: 800;
-  line-height: 1.1;
-}
-
-.t1-inv-number {
-  font-size: 0.95rem;
-  color: var(--inv-text-muted);
-  margin-top: 0.25rem;
 }
 
 .t1-billing-row {
@@ -505,24 +475,6 @@ tr:hover .btn-remove-item {
   font-size: 0.9rem;
   color: var(--inv-accent);
   margin-bottom: 0.5rem;
-}
-
-.t1-meta-grid {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  row-gap: 0.5rem;
-  column-gap: 1.5rem;
-  font-size: 0.85rem;
-}
-
-.t1-meta-label {
-  color: var(--inv-text-muted);
-  font-weight: 500;
-}
-
-.t1-meta-val {
-  text-align: right;
-  font-weight: 500;
 }
 
 /* Calculations Block */
@@ -558,15 +510,6 @@ tr:hover .btn-remove-item {
   margin-top: 0.5rem;
 }
 
-.t1-words-row {
-  grid-column: 1 / span 2;
-  font-style: italic;
-  font-size: 0.8rem;
-  color: var(--inv-text-muted);
-  text-align: right;
-  margin-top: 0.25rem;
-}
-
 /* Footer Section */
 .t1-footer-section {
   margin-top: 2.2rem;
@@ -587,14 +530,6 @@ tr:hover .btn-remove-item {
   flex: 1.2 1 240px;
 }
 
-.t1-footer-block-title {
-  font-family: var(--font-display);
-  font-weight: 700;
-  color: var(--inv-accent);
-  margin-bottom: 0.5rem;
-}
-
-
 /* Template 2 Layout (Classic Invoice Header) */
 .t2-header {
   border-bottom: 3px solid var(--inv-accent);
@@ -608,52 +543,6 @@ tr:hover .btn-remove-item {
 .t2-title-block {
   display: flex;
   flex-direction: column;
-}
-
-.t2-inv-title {
-  font-family: var(--font-display);
-  font-size: 2.8rem;
-  font-weight: 800;
-  color: var(--inv-text);
-  line-height: 1.1;
-}
-
-.t2-inv-number-wrap {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 0.25rem;
-}
-
-.t2-inv-number-label {
-  font-size: 1rem;
-  font-weight: 500;
-  color: var(--inv-text-muted);
-}
-
-.t2-inv-number-val {
-  font-family: var(--font-display);
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--inv-accent);
-}
-
-.t2-company-details {
-  text-align: right;
-  max-width: 45%;
-}
-
-.t2-company-name {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 1.3rem;
-  color: var(--inv-accent);
-}
-
-.t2-company-sub {
-  font-size: 0.85rem;
-  color: var(--inv-text-muted);
-  margin-top: 0.5rem;
 }
 
 .t2-billing-row {
@@ -673,23 +562,6 @@ tr:hover .btn-remove-item {
   border-bottom: 1px solid var(--inv-border);
   padding-bottom: 0.4rem;
   margin-bottom: 0.75rem;
-}
-
-.t2-meta-grid {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  row-gap: 0.6rem;
-  column-gap: 1.5rem;
-  font-size: 0.85rem;
-}
-
-.t2-meta-label {
-  font-weight: 600;
-  color: var(--inv-text-muted);
-}
-
-.t2-meta-val {
-  text-align: right;
 }
 
 /* Animations */

@@ -33,7 +33,7 @@ function renderTemplateSelector() {
         <div class="app-title">KB Invoice Generator</div>
       </div>
       <div>
-        <span style="font-size: 0.85rem; color: var(--text-muted);">v1.0.0 (Tauri + TS)</span>
+        <span style="font-size: 0.85rem; color: var(--text-muted);">v0.1.0 (Tauri + TS)</span>
       </div>
     </header>
     
@@ -827,7 +827,7 @@ function updateHint(fieldKey: string) {
     cleanTitle = cleanTitle.charAt(0).toUpperCase() + cleanTitle.slice(1);
     
     hintTitleEl.textContent = cleanTitle;
-    hintDescEl.textContent = FIELD_HINTS[fieldKey] || "Enter values directly on the invoice preview.";
+    hintDescEl.textContent = FIELD_HINTS[fieldKey] || FIELD_HINTS[leafKey] || "Enter values directly on the invoice preview.";
   }
 }
 
