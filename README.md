@@ -1,5 +1,16 @@
 # KB Invoice Generator
 
+![CI](https://img.shields.io/github/actions/workflow/status/Mohammad-Faiz-Cloud-Engineer/KB-Invoice-Generator/build-check.yml?branch=main&style=flat-square&label=CI)
+![Version](https://img.shields.io/badge/version-0.1.0-18181b?style=flat-square)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178C6?style=flat-square)
+![Tauri](https://img.shields.io/badge/Tauri-2-FFC131?style=flat-square)
+![Vite](https://img.shields.io/badge/Vite-6-646CFF?style=flat-square)
+![Vitest](https://img.shields.io/badge/Vitest-4-6E9F18?style=flat-square)
+![ESLint](https://img.shields.io/badge/ESLint-10-4B32C3?style=flat-square)
+![Tests](https://img.shields.io/badge/tests-73%20passing-22c55e?style=flat-square)
+![License](https://img.shields.io/badge/license-MIT-3da639?style=flat-square)
+![Platform](https://img.shields.io/badge/platform-Win%20|%20Mac%20|%20Linux-8b8cf7?style=flat-square)
+
 A offline-first desktop app for generating clean, print-ready invoice PDFs. Built on Tauri v2 + Vite + TypeScript. No cloud, no tracking, no BS.
 
 ## What it does
