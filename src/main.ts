@@ -5,7 +5,7 @@ import appLogoUrl from "./assets/app-logo.png";
 
 // App State
 let selectedTemplate: string | null = null;
-let invoiceData: InvoiceData = { ...DEFAULT_INVOICE_DATA };
+let invoiceData: InvoiceData = JSON.parse(JSON.stringify(DEFAULT_INVOICE_DATA));
 
 // Cache DOM Root
 let appRoot: HTMLDivElement;
@@ -61,6 +61,59 @@ function renderTemplateSelector() {
               </div>
               
               <!-- Template 1 Billing Info Offset -->
+              <div class="mini-row-between" style="margin-top: 8px; align-items: flex-start;">
+                <div>
+                  <span class="mini-bold-text" style="font-size: 3px; display: block; margin-bottom: 1px; color: #4b5563;">Bill to:</span>
+                  <span class="mini-gray-box" style="width: 20px; height: 2px; display: block; margin-bottom: 1px;"></span>
+                  <span class="mini-gray-box" style="width: 30px; height: 2px; display: block;"></span>
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 1px; margin-top: 2px;">
+                  <span class="mini-gray-box" style="width: 20px; height: 2px;"></span>
+                  <span class="mini-gray-box" style="width: 20px; height: 2px;"></span>
+                </div>
+              </div>
+              
+              <!-- table -->
+              <div class="mini-table" style="margin-top: 8px; border-top: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb; padding: 2px 0;">
+                <div class="mini-row-between" style="font-weight: 600; font-size: 3px; border-bottom: 1px solid #f3f4f6; padding-bottom: 1px; color: #9ca3af;">
+                  <span>ITEM</span>
+                  <span>AMOUNT</span>
+                </div>
+                <div class="mini-row-between" style="padding-top: 1px;">
+                  <span>Product A</span>
+                  <span>100.00 USD</span>
+                </div>
+              </div>
+              
+              <!-- totals -->
+              <div class="mini-totals" style="margin-top: 5px; display: flex; flex-direction: column; align-items: flex-end; gap: 1px; font-size: 3px;">
+                <div class="mini-row-between" style="width: 50%;"><span>Subtotal:</span><span>100.00 USD</span></div>
+                <div class="mini-row-between" style="width: 50%; color: #ef4444;"><span>Discount:</span><span>-5.00 USD</span></div>
+                <div class="mini-row-between" style="width: 50%;"><span>Tax:</span><span>+15.00 USD</span></div>
+                <div class="mini-row-between" style="width: 50%;"><span>Shipping:</span><span>+5.00 USD</span></div>
+                <div class="mini-row-between" style="width: 50%; font-weight: bold; border-top: 1px solid #e5e7eb; padding-top: 1px; color: #111827;"><span>Total:</span><span>115.00 USD</span></div>
+              </div>
+            </div>
+          </div>
+          <button class="btn-select-premium">Select</button>
+        </div>
+        <!-- Template 2 -->
+        <div class="template-wrapper" data-template-id="template2">
+          <h2 class="template-title-label">Template 2</h2>
+          <div class="template-card-preview">
+            <div class="mini-invoice">
+              <!-- Template 2 Header: Classic with accent rule -->
+              <div class="mini-row-between" style="border-bottom: 3px solid #111827; padding-bottom: 3px; align-items: flex-start;">
+                <div>
+                  <span class="mini-blue-text" style="font-size: 5px; font-weight: 800; display: block; line-height: 1;">Invoice</span>
+                </div>
+                <div style="text-align: right;">
+                  <span class="mini-blue-text" style="font-size: 5px; font-weight: 800; display: block; line-height: 1;">John Doe</span>
+                  <span class="mini-gray-box" style="width: 25px; height: 2px; display: block; margin-top: 1px; margin-left: auto;"></span>
+                </div>
+              </div>
+              
+              <!-- Template 2 Billing Info -->
               <div class="mini-row-between" style="margin-top: 8px; align-items: flex-start;">
                 <div>
                   <span class="mini-bold-text" style="font-size: 3px; display: block; margin-bottom: 1px; color: #4b5563;">Bill to:</span>
@@ -338,7 +391,12 @@ function renderEditor() {
         try {
           const parsed = JSON.parse(event.target?.result as string);
           if (parsed && typeof parsed === "object" && Array.isArray(parsed.items)) {
-            invoiceData = parsed;
+            invoiceData = {
+              ...JSON.parse(JSON.stringify(DEFAULT_INVOICE_DATA)),
+              ...parsed,
+              bankDetails: { ...DEFAULT_INVOICE_DATA.bankDetails, ...(parsed.bankDetails || {}) },
+              visibility: { ...DEFAULT_INVOICE_DATA.visibility, ...(parsed.visibility || {}) },
+            };
             refreshPaper();
           } else {
             alert("Invalid invoice backup file format.");
@@ -346,6 +404,7 @@ function renderEditor() {
         } catch (err) {
           alert("Failed to parse backup file: " + err);
         }
+        target.value = "";
       };
       reader.readAsText(file);
     }
@@ -494,7 +553,7 @@ function bindEditorEvents() {
         invoiceData.bankDetails[key] = input.value;
       } else {
         const key = fieldPath as keyof InvoiceData;
-        (invoiceData as any)[key] = input.value;
+        (invoiceData as unknown as Record<string, string>)[key] = input.value;
         
         if (key === "invoiceDate" || key === "paymentTerms") {
           autoCalculateDueDate();
@@ -701,10 +760,11 @@ function refreshPaper() {
  */
 function updateCalculations() {
   const subtotal = invoiceData.items.reduce((sum, item) => sum + (item.quantity * item.rate), 0);
-  const discountVal = (subtotal * invoiceData.discountPercent) / 100;
+  const discountVal = invoiceData.visibility.discount ? (subtotal * invoiceData.discountPercent) / 100 : 0;
   const taxableAmount = subtotal - discountVal;
-  const taxVal = (taxableAmount * invoiceData.taxPercent) / 100;
-  const total = taxableAmount + taxVal + invoiceData.shippingCharge;
+  const taxVal = invoiceData.visibility.tax ? (taxableAmount * invoiceData.taxPercent) / 100 : 0;
+  const shippingVal = invoiceData.visibility.shipping ? invoiceData.shippingCharge : 0;
+  const total = taxableAmount + taxVal + shippingVal;
 
   const subtotalEl = document.getElementById("calc-subtotal");
   if (subtotalEl) subtotalEl.textContent = `${subtotal.toFixed(2)} ${invoiceData.currency}`;
@@ -717,6 +777,15 @@ function updateCalculations() {
 
   const totalEl = document.getElementById("calc-total");
   if (totalEl) totalEl.textContent = `${total.toFixed(2)} ${invoiceData.currency}`;
+
+  // Sync inline calc-trigger inputs on the paper to match sidebar values
+  document.querySelectorAll(".inline-calc-trigger").forEach((el) => {
+    const input = el as HTMLInputElement;
+    const field = input.getAttribute("data-calc-field");
+    if (field === "discountPercent") input.value = String(invoiceData.discountPercent);
+    else if (field === "taxPercent") input.value = String(invoiceData.taxPercent);
+    else if (field === "shippingCharge") input.value = String(invoiceData.shippingCharge);
+  });
 
   // Dynamically set document title to the active invoice number for print/save filename defaults
   document.title = invoiceData.invoiceNumber ? `Invoice - ${invoiceData.invoiceNumber}` : "KB Invoice Generator";
@@ -733,7 +802,7 @@ function autoCalculateDueDate() {
     const days = parseInt(match[0], 10);
     const dateObj = new Date(invoiceData.invoiceDate);
     if (!isNaN(dateObj.getTime())) {
-      const dueObj = new Date(dateObj.getTime() + days * 24 * 60 * 60 * 1000);
+      const dueObj = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate() + days);
       invoiceData.dueDate = dueObj.toISOString().split("T")[0];
       
       const dueDateInput = document.querySelector('[data-field="dueDate"]') as HTMLInputElement | null;
@@ -752,11 +821,10 @@ function updateHint(fieldKey: string) {
   const hintDescEl = document.getElementById("hint-desc-text");
   
   if (hintTitleEl && hintDescEl) {
-    let cleanTitle = fieldKey.replace(/([A-Z])/g, ' $1');
+    const parts = fieldKey.split(".");
+    const leafKey = parts[parts.length - 1];
+    let cleanTitle = leafKey.replace(/([A-Z])/g, ' $1');
     cleanTitle = cleanTitle.charAt(0).toUpperCase() + cleanTitle.slice(1);
-    if (cleanTitle.startsWith("Bank Details. ")) {
-      cleanTitle = cleanTitle.replace("Bank Details. ", "Bank ");
-    }
     
     hintTitleEl.textContent = cleanTitle;
     hintDescEl.textContent = FIELD_HINTS[fieldKey] || "Enter values directly on the invoice preview.";
@@ -814,14 +882,14 @@ function renderPresetsList() {
 window.addEventListener("DOMContentLoaded", () => {
   appRoot = document.getElementById("app") as HTMLDivElement;
   
-  // Initialize dynamic dates
+  // Initialize dynamic dates using payment terms
   const today = new Date();
   const todayStr = today.toISOString().split("T")[0];
-  const sevenDaysLater = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
-  const dueStr = sevenDaysLater.toISOString().split("T")[0];
   
-  if (!invoiceData.invoiceDate) invoiceData.invoiceDate = todayStr;
-  if (!invoiceData.dueDate) invoiceData.dueDate = dueStr;
+  if (!invoiceData.invoiceDate) {
+    invoiceData.invoiceDate = todayStr;
+    if (!invoiceData.dueDate) autoCalculateDueDate();
+  }
   
   renderApp();
 });

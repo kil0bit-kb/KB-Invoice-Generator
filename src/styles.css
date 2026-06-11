@@ -21,7 +21,7 @@
   /* Invoice Theme Colors (Default Light) */
   --inv-bg: #ffffff;
   --inv-text: #000000;
-  --inv-text-muted: #000000;
+  --inv-text-muted: #6b7280;
   --inv-accent: #000000;
   --inv-border: #e5e7eb;
 }
