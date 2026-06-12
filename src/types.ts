@@ -59,12 +59,6 @@ export interface InvoiceData {
   };
 }
 
-export interface TemplateDefinition {
-  id: string;
-  name: string;
-  previewUrl?: string;
-}
-
 export const FIELD_HINTS: Record<string, string> = {
   companyName: "Enter your company or business name",
   companyAddress: "Your business physical address, e.g. 123 Main St, City, Country",
