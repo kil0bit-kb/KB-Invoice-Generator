@@ -9,6 +9,8 @@ export interface BankDetails {
   bankName: string;
   accountName: string;
   accountNo: string;
+  iban?: string;
+  raastId?: string;
   routingCode?: string;
   swiftCode?: string;
 }
@@ -53,6 +55,8 @@ export interface InvoiceData {
     bankName: boolean;
     accountName: boolean;
     accountNo: boolean;
+    iban: boolean;
+    raastId: boolean;
     routingCode: boolean;
     swiftCode: boolean;
     additionalNotes: boolean;
@@ -73,7 +77,9 @@ export const FIELD_HINTS: Record<string, string> = {
   paymentTerms: "Payment schedule, e.g., Net 30, Due on Receipt",
   bankName: "Name of your bank, e.g., Chase Bank",
   accountName: "Account holder name",
-  accountNo: "Bank account or IBAN number",
+  accountNo: "Bank account or number",
+  iban: "International Bank Account Number (IBAN), e.g., PK36SCBL0000001123456701",
+  raastId: "Pakistan Raast ID or registered mobile payment ID, e.g., 03001234567",
   routingCode: "Routing/Sort transit number (optional)",
   swiftCode: "SWIFT/BIC bank routing identifier code (optional)",
   currency: "Currency symbol or code (e.g., USD, EUR, GBP)",

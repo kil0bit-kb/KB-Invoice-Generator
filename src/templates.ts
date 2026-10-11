@@ -55,7 +55,7 @@ export function renderTemplate(templateId: string, data: InvoiceData): string {
           
           <div class="t1-invoice-meta-top" style="text-align: right; display: flex; flex-direction: column; align-items: flex-end; width: 50%;">
             <div style="font-size: 2.2rem; font-weight: 800; text-transform: uppercase; color: var(--inv-accent); letter-spacing: 0.05em; line-height: 1;">Invoice #</div>
-            <input type="text" class="edit-field text-right" style="font-weight: 700; font-size: 1.1rem; width: 120px; text-align: right; margin-top: 0.4rem; padding: 0; color: var(--inv-accent);" data-field="invoiceNumber" value="${data.invoiceNumber}" placeholder="INV-0001" />
+            <input type="text" class="edit-field text-right" style="font-weight: 700; font-size: 1.1rem; min-width: 140px; max-width: 100%; width: 260px; text-align: right; margin-top: 0.4rem; padding: 0; color: var(--inv-accent);" data-field="invoiceNumber" value="${data.invoiceNumber}" placeholder="INV-0001" />
           </div>
         </div>
 
@@ -166,9 +166,10 @@ export function renderTemplate(templateId: string, data: InvoiceData): string {
           <div class="t1-summary-val t1-summary-total" id="calc-total">${total.toFixed(2)} ${data.currency}</div>
         </div>
 
-        <!-- Footer / Details Section -->
-        ${(data.visibility.companyAddress || data.visibility.companyContact || data.visibility.bankDetails) ? `
-          <div class="t1-footer-section">
+        <!-- Footer / Details & Notes Block (Kept together as a single unified group) -->
+        <div class="invoice-footer-block">
+          ${(data.visibility.companyAddress || data.visibility.companyContact || data.visibility.bankDetails) ? `
+            <div class="t1-footer-section">
             <div class="t1-footer-col col-info" style="flex: 1 1 100%; display: flex; gap: 3rem;">
               ${(data.visibility.companyAddress || data.visibility.companyContact) ? `
                 <div style="flex: 1 1 0px; display: flex; flex-direction: column; gap: 0.4rem;">
@@ -211,6 +212,20 @@ export function renderTemplate(templateId: string, data: InvoiceData): string {
                       <input type="text" class="edit-field" data-field="bankDetails.accountNo" value="${data.bankDetails.accountNo}" placeholder="Account Number" />
                     </div>
                   ` : ""}
+                  ${data.visibility.iban ? `
+                    <div class="removable-wrapper" style="display: grid; grid-template-columns: 70px 1fr; align-items: center; width: 100%;">
+                      <button class="btn-hide-section" data-hide-section="iban" title="Hide IBAN">×</button>
+                      <span style="color: var(--inv-text-muted); font-weight: 500;">IBAN:</span>
+                      <input type="text" class="edit-field" data-field="bankDetails.iban" value="${data.bankDetails.iban || ''}" placeholder="IBAN Number" />
+                    </div>
+                  ` : ""}
+                  ${data.visibility.raastId ? `
+                    <div class="removable-wrapper" style="display: grid; grid-template-columns: 70px 1fr; align-items: center; width: 100%;">
+                      <button class="btn-hide-section" data-hide-section="raastId" title="Hide Raast ID">×</button>
+                      <span style="color: var(--inv-text-muted); font-weight: 500;">Raast ID:</span>
+                      <input type="text" class="edit-field" data-field="bankDetails.raastId" value="${data.bankDetails.raastId || ''}" placeholder="Raast ID" />
+                    </div>
+                  ` : ""}
                   ${data.visibility.swiftCode ? `
                     <div class="removable-wrapper" style="display: grid; grid-template-columns: 70px 1fr; align-items: center; width: 100%;">
                       <button class="btn-hide-section" data-hide-section="swiftCode" title="Hide SWIFT Code">×</button>
@@ -231,13 +246,14 @@ export function renderTemplate(templateId: string, data: InvoiceData): string {
           </div>
         ` : ""}
 
-        <!-- Thank You Message Centered at Absolute Bottom -->
-        ${data.visibility.additionalNotes ? `
-          <div class="removable-wrapper" style="margin-top: 2.5rem; text-align: center; width: 100%;">
-            <button class="btn-hide-section" data-hide-section="additionalNotes" title="Hide Notes" style="left: 50%; transform: translateX(-50%); top: -14px;">×</button>
-            <textarea class="edit-field text-center" style="text-align: center; font-style: italic; font-size: 0.95rem; width: 100%; border: none;" data-field="additionalNotes" placeholder="Thank you for your business!">${data.additionalNotes}</textarea>
-          </div>
-        ` : ""}
+          <!-- Thank You Message Centered at Absolute Bottom -->
+          ${data.visibility.additionalNotes ? `
+            <div class="removable-wrapper" style="margin-top: 2.5rem; text-align: center; width: 100%;">
+              <button class="btn-hide-section" data-hide-section="additionalNotes" title="Hide Notes" style="left: 50%; transform: translateX(-50%); top: -14px;">×</button>
+              <textarea class="edit-field text-center" style="text-align: center; font-style: italic; font-size: 0.95rem; width: 100%; border: none;" data-field="additionalNotes" placeholder="Thank you for your business!">${data.additionalNotes}</textarea>
+            </div>
+          ` : ""}
+        </div>
       </div>
     `;
   } else {
@@ -259,7 +275,7 @@ export function renderTemplate(templateId: string, data: InvoiceData): string {
           
           <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end; width: 50%;">
             <div style="font-size: 2.2rem; font-weight: 800; text-transform: uppercase; color: var(--inv-accent); letter-spacing: 0.05em; line-height: 1;">Invoice #</div>
-            <input type="text" class="edit-field text-right" style="font-weight: 700; font-size: 1.1rem; width: 120px; text-align: right; margin-top: 0.4rem; padding: 0; color: var(--inv-accent);" data-field="invoiceNumber" value="${data.invoiceNumber}" placeholder="INV-0001" />
+            <input type="text" class="edit-field text-right" style="font-weight: 700; font-size: 1.1rem; min-width: 140px; max-width: 100%; width: 260px; text-align: right; margin-top: 0.4rem; padding: 0; color: var(--inv-accent);" data-field="invoiceNumber" value="${data.invoiceNumber}" placeholder="INV-0001" />
           </div>
         </div>
 
@@ -370,9 +386,10 @@ export function renderTemplate(templateId: string, data: InvoiceData): string {
           <div class="t1-summary-val t1-summary-total" id="calc-total" style="color: var(--inv-accent);">${total.toFixed(2)} ${data.currency}</div>
         </div>
 
-        <!-- Footer / Details Section -->
-        ${(data.visibility.companyAddress || data.visibility.companyContact || data.visibility.bankDetails) ? `
-          <div class="t1-footer-section" style="border-top: 2px solid var(--inv-border); padding-top: 2rem; margin-top: 3.5rem;">
+        <!-- Footer / Details & Notes Block (Kept together as a single unified group) -->
+        <div class="invoice-footer-block">
+          ${(data.visibility.companyAddress || data.visibility.companyContact || data.visibility.bankDetails) ? `
+            <div class="t1-footer-section" style="border-top: 2px solid var(--inv-border); padding-top: 2rem; margin-top: 3.5rem;">
             <div class="t1-footer-col col-info" style="flex: 1 1 100%; display: flex; gap: 3rem;">
               ${(data.visibility.companyAddress || data.visibility.companyContact) ? `
                 <div style="flex: 1 1 0px; display: flex; flex-direction: column; gap: 0.4rem;">
@@ -415,6 +432,20 @@ export function renderTemplate(templateId: string, data: InvoiceData): string {
                       <input type="text" class="edit-field" data-field="bankDetails.accountNo" value="${data.bankDetails.accountNo}" placeholder="Account Number" />
                     </div>
                   ` : ""}
+                  ${data.visibility.iban ? `
+                    <div class="removable-wrapper" style="display: grid; grid-template-columns: 70px 1fr; align-items: center; width: 100%;">
+                      <button class="btn-hide-section" data-hide-section="iban" title="Hide IBAN">×</button>
+                      <span style="color: var(--inv-text-muted);">IBAN:</span>
+                      <input type="text" class="edit-field" data-field="bankDetails.iban" value="${data.bankDetails.iban || ''}" placeholder="IBAN Number" />
+                    </div>
+                  ` : ""}
+                  ${data.visibility.raastId ? `
+                    <div class="removable-wrapper" style="display: grid; grid-template-columns: 70px 1fr; align-items: center; width: 100%;">
+                      <button class="btn-hide-section" data-hide-section="raastId" title="Hide Raast ID">×</button>
+                      <span style="color: var(--inv-text-muted);">Raast ID:</span>
+                      <input type="text" class="edit-field" data-field="bankDetails.raastId" value="${data.bankDetails.raastId || ''}" placeholder="Raast ID" />
+                    </div>
+                  ` : ""}
                   ${data.visibility.swiftCode ? `
                     <div class="removable-wrapper" style="display: grid; grid-template-columns: 70px 1fr; align-items: center; width: 100%;">
                       <button class="btn-hide-section" data-hide-section="swiftCode" title="Hide SWIFT Code">×</button>
@@ -435,13 +466,14 @@ export function renderTemplate(templateId: string, data: InvoiceData): string {
           </div>
         ` : ""}
 
-        <!-- Thank You Message Centered at Absolute Bottom -->
-        ${data.visibility.additionalNotes ? `
-          <div class="removable-wrapper" style="margin-top: 2.5rem; text-align: center; width: 100%;">
-            <button class="btn-hide-section" data-hide-section="additionalNotes" title="Hide Notes" style="left: 50%; transform: translateX(-50%); top: -14px;">×</button>
-            <textarea class="edit-field text-center" style="text-align: center; font-style: italic; font-size: 0.95rem; width: 100%; border: none;" data-field="additionalNotes" placeholder="Thank you for your business!">${data.additionalNotes}</textarea>
-          </div>
-        ` : ""}
+          <!-- Thank You Message Centered at Absolute Bottom -->
+          ${data.visibility.additionalNotes ? `
+            <div class="removable-wrapper" style="margin-top: 2.5rem; text-align: center; width: 100%;">
+              <button class="btn-hide-section" data-hide-section="additionalNotes" title="Hide Notes" style="left: 50%; transform: translateX(-50%); top: -14px;">×</button>
+              <textarea class="edit-field text-center" style="text-align: center; font-style: italic; font-size: 0.95rem; width: 100%; border: none;" data-field="additionalNotes" placeholder="Thank you for your business!">${data.additionalNotes}</textarea>
+            </div>
+          ` : ""}
+        </div>
       </div>
     `;
   }

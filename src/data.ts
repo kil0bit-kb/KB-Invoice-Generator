@@ -39,6 +39,8 @@ export const DEFAULT_INVOICE_DATA: InvoiceData = {
     bankName: "Bank Inc.",
     accountName: "KB Karki",
     accountNo: "445566998877",
+    iban: "PK36SCBL0000001123456701",
+    raastId: "+92-300-1234567",
     routingCode: "123456789",
     swiftCode: "BINKNPKAXXX"
   },
@@ -58,6 +60,8 @@ export const DEFAULT_INVOICE_DATA: InvoiceData = {
     bankName: true,
     accountName: true,
     accountNo: true,
+    iban: true,
+    raastId: true,
     routingCode: true,
     swiftCode: true,
     additionalNotes: true

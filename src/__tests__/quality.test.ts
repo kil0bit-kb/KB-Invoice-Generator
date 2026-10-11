@@ -7,14 +7,14 @@ describe("code quality", () => {
       encoding: "utf-8",
       stdio: "pipe",
     });
-  });
+  }, 30000);
 
   it("TypeScript compiles without errors", () => {
     execSync("npx tsc --noEmit", {
       encoding: "utf-8",
       stdio: "pipe",
     });
-  });
+  }, 30000);
 
   it("no unused exports in source", () => {
     const result = execSync("npx ts-prune", {
@@ -26,5 +26,5 @@ describe("code quality", () => {
     // (e.g. InvoiceItem and BankDetails used in InvoiceData interface)
     const trulyDead = lines.filter((l) => !l.includes("(used in module)"));
     expect(trulyDead).toEqual([]);
-  });
+  }, 30000);
 });

@@ -642,17 +642,43 @@ tr:hover .btn-remove-item {
   }
   
   @page {
-    margin: 0;
+    margin: 14mm 15mm 16mm 15mm;
+    @bottom-right {
+      content: "Page " counter(page) " of " counter(pages);
+      font-family: 'Inter', -apple-system, sans-serif;
+      font-size: 8.5pt;
+      color: #64748b;
+      font-weight: 500;
+    }
   }
 
   .invoice-paper {
     box-shadow: none !important;
     border: none !important;
-    padding: 2.5rem !important;
+    padding: 0 !important;
     margin: 0 !important;
     width: 100% !important;
     max-width: 100% !important;
     min-height: auto !important;
+  }
+
+  /* Multi-page break rules & footer grouping */
+  .items-table tr {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  .items-table thead {
+    display: table-header-group !important;
+  }
+
+  .t1-billing-row, 
+  .t2-billing-row,
+  .t1-totals-grid,
+  .invoice-footer-block,
+  .t1-footer-section {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
   }
 
   .edit-field {

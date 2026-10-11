@@ -6,6 +6,8 @@ import appLogoUrl from "./assets/app-logo.png";
 // App State
 let selectedTemplate: string | null = null;
 let invoiceData: InvoiceData = JSON.parse(JSON.stringify(DEFAULT_INVOICE_DATA));
+let invoiceFormatChoice: "standard" | "date-based" | "custom" = "standard";
+let customFormatPattern = "INV-YYYYMMDD/1001";
 
 // Cache DOM Root
 let appRoot: HTMLDivElement;
@@ -239,7 +241,7 @@ function renderEditor() {
             </div>
             
             <div>
-              <label style="font-size: 0.75rem; color: var(--text-muted); display: block; margin-bottom: 0.25rem;">Shipping (${invoiceData.currency})</label>
+              <label id="sidebar-shipping-label" style="font-size: 0.75rem; color: var(--text-muted); display: block; margin-bottom: 0.25rem;">Shipping (${invoiceData.currency})</label>
               <input type="number" class="edit-field" style="background: rgba(255,255,255,0.05); padding: 0.4rem; border: 1px solid var(--border-color); color: white;" id="sidebar-shipping" min="0" value="${invoiceData.shippingCharge}" data-sidebar-field="shippingCharge" />
             </div>
           </div>
@@ -270,6 +272,26 @@ function renderEditor() {
                 Remove
               </button>
             ` : ""}
+          </div>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Invoice Number Format</div>
+          <div style="margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.5rem;">
+            <select id="sidebar-invoice-format" class="edit-field" style="background: rgba(255,255,255,0.05); padding: 0.45rem; border: 1px solid var(--border-color); color: white; border-radius: 6px; font-size: 0.8rem; width: 100%; cursor: pointer;">
+              <option value="standard" ${invoiceFormatChoice === "standard" ? "selected" : ""} style="background: #141a2e; color: white;">Standard (INV0001)</option>
+              <option value="date-based" ${invoiceFormatChoice === "date-based" ? "selected" : ""} style="background: #141a2e; color: white;">Date Based (INV-YYYYMMDD/1001)</option>
+              <option value="custom" ${invoiceFormatChoice === "custom" ? "selected" : ""} style="background: #141a2e; color: white;">Custom Format...</option>
+            </select>
+            
+            <div id="custom-format-wrapper" style="display: ${invoiceFormatChoice === "custom" ? "block" : "none"};">
+              <label style="font-size: 0.72rem; color: var(--text-muted); display: block; margin-bottom: 0.25rem;">Custom Pattern (use YYYY, MM, DD):</label>
+              <input type="text" id="custom-format-input" placeholder="INV-YYYYMMDD/1001" value="${customFormatPattern}" class="edit-field" style="background: rgba(255,255,255,0.05); padding: 0.4rem; border: 1px solid var(--border-color); color: white; width: 100%; font-size: 0.8rem;" />
+            </div>
+
+            <button class="btn btn-secondary" id="btn-apply-invoice-format" style="font-size: 0.8rem; padding: 0.45rem 0.9rem; justify-content: center; width: 100%;">
+              Apply / Generate Number
+            </button>
           </div>
         </div>
 
@@ -314,6 +336,12 @@ function renderEditor() {
             </label>
             <label style="display: flex; align-items: center; gap: 0.4rem; cursor: pointer; color: var(--text-primary);">
               <input type="checkbox" data-visibility-toggle="accountNo" ${invoiceData.visibility.accountNo ? 'checked' : ''} /> A/C Number
+            </label>
+            <label style="display: flex; align-items: center; gap: 0.4rem; cursor: pointer; color: var(--text-primary);">
+              <input type="checkbox" data-visibility-toggle="iban" ${invoiceData.visibility.iban ? 'checked' : ''} /> IBAN
+            </label>
+            <label style="display: flex; align-items: center; gap: 0.4rem; cursor: pointer; color: var(--text-primary);">
+              <input type="checkbox" data-visibility-toggle="raastId" ${invoiceData.visibility.raastId ? 'checked' : ''} /> Raast ID
             </label>
             <label style="display: flex; align-items: center; gap: 0.4rem; cursor: pointer; color: var(--text-primary);">
               <input type="checkbox" data-visibility-toggle="swiftCode" ${invoiceData.visibility.swiftCode ? 'checked' : ''} /> Bank SWIFT
@@ -439,6 +467,47 @@ function renderEditor() {
     renderEditor();
   });
 
+  // Invoice Number Format Listeners
+  const formatSelect = document.getElementById("sidebar-invoice-format") as HTMLSelectElement | null;
+  const customWrapper = document.getElementById("custom-format-wrapper");
+  const customInput = document.getElementById("custom-format-input") as HTMLInputElement | null;
+  const applyFormatBtn = document.getElementById("btn-apply-invoice-format");
+
+  function applyInvoiceFormat() {
+    if (!formatSelect) return;
+    const selected = formatSelect.value as "standard" | "date-based" | "custom";
+    invoiceFormatChoice = selected;
+    const newNumber = generateInvoiceNumber(selected, customInput ? customInput.value : "");
+    invoiceData.invoiceNumber = newNumber;
+    document.title = `${newNumber} - KB Invoice Generator`;
+
+    const invNumInput = document.querySelector('input[data-field="invoiceNumber"]') as HTMLInputElement | null;
+    if (invNumInput) {
+      invNumInput.value = newNumber;
+    } else {
+      refreshPaper();
+    }
+  }
+
+  formatSelect?.addEventListener("change", () => {
+    if (formatSelect.value === "custom") {
+      if (customWrapper) customWrapper.style.display = "block";
+    } else {
+      if (customWrapper) customWrapper.style.display = "none";
+    }
+    applyInvoiceFormat();
+  });
+
+  customInput?.addEventListener("click", () => customInput.select());
+  customInput?.addEventListener("input", () => {
+    if (customInput) customFormatPattern = customInput.value;
+    applyInvoiceFormat();
+  });
+
+  applyFormatBtn?.addEventListener("click", () => {
+    applyInvoiceFormat();
+  });
+
   // Brand Accent Color Picker
   const colorPickerInput = document.getElementById("sidebar-accent-color") as HTMLInputElement | null;
   colorPickerInput?.addEventListener("input", (e) => {
@@ -470,11 +539,17 @@ function renderEditor() {
     input.addEventListener("focus", () => {
       const field = input.getAttribute("data-sidebar-field") || "";
       updateHint(field);
+      input.select();
+    });
+    input.addEventListener("click", () => {
+      input.select();
     });
     input.addEventListener("input", () => {
       const field = input.getAttribute("data-sidebar-field") || "";
       if (field === "currency") {
         invoiceData.currency = input.value;
+        const shpLabel = document.getElementById("sidebar-shipping-label");
+        if (shpLabel) shpLabel.textContent = `Shipping (${invoiceData.currency})`;
         refreshPaper(); // currency affects labels, need full paper refresh
       } else if (field === "discountPercent") {
         invoiceData.discountPercent = Math.max(0, Math.min(100, parseFloat(input.value) || 0));
@@ -747,11 +822,13 @@ function refreshPaper() {
     const taxEl = document.getElementById("sidebar-tax") as HTMLInputElement | null;
     const shpEl = document.getElementById("sidebar-shipping") as HTMLInputElement | null;
     const clrEl = document.getElementById("sidebar-accent-color") as HTMLInputElement | null;
+    const shpLabel = document.getElementById("sidebar-shipping-label");
     if (curEl) curEl.value = invoiceData.currency;
     if (disEl) disEl.value = String(invoiceData.discountPercent);
     if (taxEl) taxEl.value = String(invoiceData.taxPercent);
     if (shpEl) shpEl.value = String(invoiceData.shippingCharge);
     if (clrEl) clrEl.value = invoiceData.accentColor;
+    if (shpLabel) shpLabel.textContent = `Shipping (${invoiceData.currency})`;
   }
 }
 
@@ -811,6 +888,31 @@ function autoCalculateDueDate() {
       }
     }
   }
+}
+
+/**
+ * Generates an invoice number based on a selected format.
+ */
+function generateInvoiceNumber(format: "standard" | "date-based" | "custom", customPattern?: string): string {
+  const dateSource = invoiceData.invoiceDate ? new Date(invoiceData.invoiceDate) : new Date();
+  const validDate = isNaN(dateSource.getTime()) ? new Date() : dateSource;
+
+  const yyyy = String(validDate.getFullYear());
+  const mm = String(validDate.getMonth() + 1).padStart(2, "0");
+  const dd = String(validDate.getDate()).padStart(2, "0");
+
+  if (format === "date-based") {
+    return `INV-${yyyy}${mm}${dd}/1001`;
+  } else if (format === "custom") {
+    if (!customPattern || !customPattern.trim()) {
+      return `INV-${yyyy}${mm}${dd}/1001`;
+    }
+    return customPattern
+      .replace(/YYYY/g, yyyy)
+      .replace(/MM/g, mm)
+      .replace(/DD/g, dd);
+  }
+  return "INV0001";
 }
 
 /**
