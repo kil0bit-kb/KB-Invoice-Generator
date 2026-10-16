@@ -150,6 +150,58 @@ function renderTemplateSelector() {
           </div>
           <button class="btn-select-premium">Select</button>
         </div>
+        <!-- House rent allowance receipt template -->
+        <div class="template-wrapper" data-template-id="hra">
+          <h2 class="template-title-label">House Rent Receipt</h2>
+          <div class="template-card-preview">
+            <div class="mini-invoice" style="max-width: 205px; margin: 0 auto;">
+              <div class="mini-row-between" style="border-bottom: 1px solid #059669; padding-bottom: 4px; align-items: flex-start;">
+                <div><span style="font-size: 6px; font-weight: 800; color: #059669; display: block;">HOUSE RENT RECEIPT</span><span style="font-size: 3px; color: #64748b;">Issued under Section 10(13A)</span></div>
+                <span class="mini-bold-text" style="font-size: 4px;">RCPT-2026-10<br/>05-10-2026</span>
+              </div>
+              <div style="font-size: 4px; line-height: 1.8; margin-top: 6px;">Received with thanks from <b>Rahul Sharma</b> a sum of <b style="color: #059669;">₹18,500</b> towards house rent for the period of <b>October 2026</b>.</div>
+              <div class="mini-row-between" style="font-size: 4px; border-top: 1px solid #e5e7eb; padding-top: 5px; margin-top: 7px;"><span>Suresh Kumar Verma<br/>Landlord PAN: ABCDE1234F</span><span>Signature</span></div>
+            </div>
+          </div>
+          <button class="btn-select-premium">Select</button>
+        </div>
+        <!-- A5 invoice template -->
+        <div class="template-wrapper" data-template-id="a5">
+          <h2 class="template-title-label">A5 Invoice</h2>
+          <div class="template-card-preview">
+            <div class="mini-invoice" style="max-width: 130px; margin: 0 auto;">
+              <div class="mini-row-between" style="border-bottom: 2px solid #2563eb; padding-bottom: 4px; align-items: flex-start;">
+                <span class="mini-blue-text" style="font-size: 6px; font-weight: 800;">BUSINESS NAME</span>
+                <span class="mini-bold-text" style="font-size: 6px;">INVOICE</span>
+              </div>
+              <div style="font-size: 4px; margin-top: 7px; color: #6b7280;">BILL TO</div>
+              <span class="mini-gray-box" style="width: 44px; height: 3px; display: block; margin-top: 2px;"></span>
+              <div class="mini-row-between" style="font-size: 4px; border-bottom: 1px solid #e5e7eb; margin-top: 8px; padding-bottom: 2px;"><span>ITEM</span><span>AMOUNT</span></div>
+              <div class="mini-row-between" style="font-size: 4px; margin-top: 3px;"><span>Product or service</span><span>100.00</span></div>
+              <div style="text-align: right; border-top: 1px solid #e5e7eb; margin-top: 6px; padding-top: 3px; font-size: 5px; font-weight: 700;">TOTAL&nbsp;&nbsp; 100.00</div>
+            </div>
+          </div>
+          <button class="btn-select-premium">Select</button>
+        </div>
+        <!-- Compact receipt template -->
+        <div class="template-wrapper" data-template-id="receipt">
+          <h2 class="template-title-label">Compact Receipt</h2>
+          <div class="template-card-preview">
+            <div class="mini-invoice" style="max-width: 190px; margin: 0 auto; text-align: center;">
+              <span class="mini-bold-text" style="font-size: 7px; display: block;">BUSINESS NAME</span>
+              <span style="font-size: 4px; color: #6b7280;">PAYMENT RECEIPT</span>
+              <div style="border-top: 1px dashed #9ca3af; margin: 5px 0;"></div>
+              <div class="mini-row-between" style="font-size: 4px;"><span>Receipt #</span><span>INV-001</span></div>
+              <div style="border-top: 1px dashed #9ca3af; margin: 5px 0;"></div>
+              <div class="mini-row-between" style="font-size: 4px; font-weight: 700;"><span>ITEM</span><span>TOTAL</span></div>
+              <div class="mini-row-between" style="font-size: 4px; margin-top: 3px;"><span>Product or service</span><span>100.00</span></div>
+              <div style="border-top: 1px dashed #9ca3af; margin: 5px 0;"></div>
+              <div class="mini-row-between" style="font-size: 5px; font-weight: 700;"><span>TOTAL</span><span>100.00</span></div>
+              <span style="font-size: 4px; display: block; margin-top: 6px;">Thank you!</span>
+            </div>
+          </div>
+          <button class="btn-select-premium">Select</button>
+        </div>
       </div>
     </div>
   `;
@@ -170,7 +222,7 @@ function renderTemplateSelector() {
  * Renders the full editor layout.
  */
 function renderEditor() {
-  appRoot.className = "";
+  appRoot.className = selectedTemplate === "a5" ? "page-a5" : selectedTemplate === "hra" ? "page-hra" : "";
   
   appRoot.innerHTML = `
     <header class="app-header">
@@ -495,6 +547,7 @@ function renderEditor() {
     checkbox.addEventListener("change", () => {
       const field = checkbox.getAttribute("data-visibility-toggle") as keyof typeof invoiceData.visibility;
       invoiceData.visibility[field] = checkbox.checked;
+      if (!checkbox.checked) resetHiddenCalculationValue(field);
       refreshPaper();
     });
   });
@@ -553,7 +606,8 @@ function bindEditorEvents() {
         invoiceData.bankDetails[key] = input.value;
       } else {
         const key = fieldPath as keyof InvoiceData;
-        (invoiceData as unknown as Record<string, string>)[key] = input.value;
+        if (key === "rentAmount") invoiceData.rentAmount = Math.max(0, parseFloat(input.value) || 0);
+        else (invoiceData as unknown as Record<string, string>)[key] = input.value;
         
         if (key === "invoiceDate" || key === "paymentTerms") {
           autoCalculateDueDate();
@@ -658,6 +712,7 @@ function bindEditorEvents() {
     btn.addEventListener("click", () => {
       const field = btn.getAttribute("data-hide-section") as keyof typeof invoiceData.visibility;
       invoiceData.visibility[field] = false;
+      resetHiddenCalculationValue(field);
       refreshPaper();
     });
   });
@@ -722,6 +777,13 @@ function bindEditorEvents() {
     textarea.style.height = "auto";
     textarea.style.height = textarea.scrollHeight + "px";
   });
+}
+
+/** Clear the stored amount or rate when its invoice calculation row is hidden. */
+function resetHiddenCalculationValue(field: keyof typeof invoiceData.visibility) {
+  if (field === "discount") invoiceData.discountPercent = 0;
+  else if (field === "tax") invoiceData.taxPercent = 0;
+  else if (field === "shipping") invoiceData.shippingCharge = 0;
 }
 
 /**

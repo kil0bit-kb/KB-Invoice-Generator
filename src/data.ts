@@ -35,6 +35,15 @@ export const DEFAULT_INVOICE_DATA: InvoiceData = {
   
   additionalNotes: "Thank you for your business!",
   paymentTerms: "Net 7",
+  rentAmount: 18500,
+  rentAmountWords: "Eighteen Thousand Five Hundred Rupees Only",
+  rentReceiptNumber: "RCPT-2026-10",
+  rentLandlordName: "Suresh Kumar Verma",
+  rentTenantName: "Rahul Sharma",
+  rentPeriod: "October 2026",
+  propertyAddress: "Flat 302, Green Acres Society, Sector 62, Noida, UP - 201301",
+  paymentMode: "UPI / Online Transfer",
+  landlordPan: "ABCDE1234F",
   bankDetails: {
     bankName: "Bank Inc.",
     accountName: "KB Karki",

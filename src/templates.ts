@@ -36,7 +36,79 @@ export function renderTemplate(templateId: string, data: InvoiceData): string {
     </tr>
   `).join("");
 
-  if (templateId === "template1") {
+  if (templateId === "hra") {
+    return `
+      <div class="hra-receipt" style="--inv-accent: ${data.accentColor || '#059669'};">
+        <div class="hra-header">
+          <div>
+            <div class="hra-title">HOUSE RENT RECEIPT</div>
+            <div class="hra-subtitle">Issued under Section 10(13A) of the Income Tax Act</div>
+          </div>
+          <div class="hra-meta">
+            <label>Receipt No: <input class="edit-field" data-field="rentReceiptNumber" value="${data.rentReceiptNumber}" /></label>
+            <label>Date: <input type="date" class="edit-field" data-field="invoiceDate" value="${data.invoiceDate}" /></label>
+          </div>
+        </div>
+
+        <div class="hra-statement">
+          <span>Received with thanks from</span>
+          <input class="edit-field hra-inline-name" data-field="rentTenantName" value="${data.rentTenantName}" placeholder="Tenant name" />
+          <span>a sum of</span>
+          <label class="hra-amount"><span>₹</span><input type="number" min="0" step="0.01" class="edit-field" data-field="rentAmount" value="${data.rentAmount}" /></label>
+          <span>(Rupees</span>
+          <input class="edit-field hra-words" data-field="rentAmountWords" value="${data.rentAmountWords}" placeholder="Amount in words" />
+          <span>) by</span>
+          <input class="edit-field hra-inline-name" data-field="paymentMode" value="${data.paymentMode}" placeholder="Payment mode" />
+          <span>towards house rent for the property situated at</span>
+          <textarea class="edit-field hra-address" data-field="propertyAddress" placeholder="Rented property address">${data.propertyAddress}</textarea>
+          <span>for the period of</span>
+          <input class="edit-field hra-period" data-field="rentPeriod" value="${data.rentPeriod}" placeholder="Month and year" />.
+        </div>
+
+        <div class="hra-footer">
+          <div class="hra-landlord">
+            <input class="edit-field" data-field="rentLandlordName" value="${data.rentLandlordName}" placeholder="Landlord name" />
+            <label>Landlord PAN: <input class="edit-field" data-field="landlordPan" value="${data.landlordPan}" placeholder="PAN (if applicable)" /></label>
+            <span>(Property Owner / Authorized Signatory)</span>
+          </div>
+          <div class="hra-stamp">AFFIX<br /><strong>₹1</strong><br />REVENUE<br />STAMP</div>
+          <div class="hra-signature"><div></div><strong>Signature of Landlord</strong></div>
+        </div>
+      </div>
+    `;
+  }
+
+  if (templateId === "receipt") {
+    return `
+      <div class="receipt-container" style="--inv-accent: ${data.accentColor || '#000000'};">
+        <div class="receipt-header">
+          <input class="edit-field receipt-company" data-field="companyName" value="${data.companyName}" placeholder="Business name" />
+          <textarea class="edit-field receipt-contact" data-field="companyContact" placeholder="Business contact">${data.companyContact}</textarea>
+          <div class="receipt-title">RECEIPT</div>
+        </div>
+        <div class="receipt-meta">
+          <label>Receipt # <input class="edit-field" data-field="invoiceNumber" value="${data.invoiceNumber}" /></label>
+          <label>Date <input type="date" class="edit-field" data-field="invoiceDate" value="${data.invoiceDate}" /></label>
+          <label>Received from <input class="edit-field" data-field="clientName" value="${data.clientName}" placeholder="Customer name" /></label>
+        </div>
+        <table class="items-table receipt-items">
+          <thead><tr><th class="col-drag"></th><th class="col-desc">Item</th><th class="col-qty">Qty</th><th class="col-rate">Price</th><th class="col-amount">Amount</th><th class="col-action"></th></tr></thead>
+          <tbody>${itemRowsHtml}</tbody>
+        </table>
+        <button class="btn-add-item" id="add-item-btn">+ Add Item</button>
+        <div class="receipt-totals">
+          <div><span>Subtotal</span><span>${subtotal.toFixed(2)} ${data.currency}</span></div>
+          ${data.visibility.discount ? `<div><span>Discount (<input type="number" class="edit-field inline-calc-trigger" data-calc-field="discountPercent" min="0" max="100" value="${data.discountPercent}" />%)</span><span id="calc-discount">- ${discountVal.toFixed(2)} ${data.currency}</span></div>` : ""}
+          ${data.visibility.tax ? `<div><span>Tax (<input type="number" class="edit-field inline-calc-trigger" data-calc-field="taxPercent" min="0" max="100" value="${data.taxPercent}" />%)</span><span id="calc-tax">+ ${taxVal.toFixed(2)} ${data.currency}</span></div>` : ""}
+          ${data.visibility.shipping ? `<div><span>Shipping</span><span>+ <input type="number" class="edit-field inline-calc-trigger" data-calc-field="shippingCharge" min="0" value="${data.shippingCharge}" /> ${data.currency}</span></div>` : ""}
+          <div class="receipt-total"><span>TOTAL</span><span id="calc-total">${total.toFixed(2)} ${data.currency}</span></div>
+        </div>
+        <textarea class="edit-field receipt-thanks" data-field="additionalNotes" placeholder="Thank you for your business">${data.additionalNotes || "Thank you for your business!"}</textarea>
+      </div>
+    `;
+  }
+
+  if (templateId === "template1" || templateId === "a5") {
     // Template 1 Layout (Modern Offset)
     return `
       <div class="t1-container" style="--inv-accent: ${data.accentColor || '#000000'};">

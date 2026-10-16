@@ -35,6 +35,15 @@ export interface InvoiceData {
   
   additionalNotes: string;
   paymentTerms: string;
+  rentAmount: number;
+  rentAmountWords: string;
+  rentReceiptNumber: string;
+  rentLandlordName: string;
+  rentTenantName: string;
+  rentPeriod: string;
+  propertyAddress: string;
+  paymentMode: string;
+  landlordPan: string;
   bankDetails: BankDetails;
   logoUrl?: string;
   accentColor: string;
@@ -71,6 +80,15 @@ export const FIELD_HINTS: Record<string, string> = {
   dueDate: "Due date for payment (e.g., March 27, 2025)",
   additionalNotes: "Add thank you messages or specific details here",
   paymentTerms: "Payment schedule, e.g., Net 30, Due on Receipt",
+  rentAmount: "Monthly rent amount for the HRA receipt",
+  rentAmountWords: "Rent amount written in words",
+  rentReceiptNumber: "Unique receipt number for the rent receipt",
+  rentLandlordName: "Landlord or property owner's name",
+  rentTenantName: "Tenant's full name",
+  rentPeriod: "Month and year covered by the rent payment",
+  propertyAddress: "Full address of the rented property",
+  paymentMode: "How rent was paid, e.g. bank transfer or cash",
+  landlordPan: "Landlord's PAN, if applicable",
   bankName: "Name of your bank, e.g., Chase Bank",
   accountName: "Account holder name",
   accountNo: "Bank account or IBAN number",
