@@ -439,6 +439,104 @@ tr:hover .btn-remove-item {
 }
 
 /* Template Specific Layouts */
+.receipt-container {
+  --inv-text: #1f2937;
+  --inv-text-muted: #6b7280;
+  --inv-border: #d1d5db;
+  width: 80mm;
+  max-width: 100%;
+  min-height: 0;
+  margin: 0 auto;
+  padding: 7mm;
+  color: var(--inv-text);
+  background: #fff;
+  font-size: 11px;
+  line-height: 1.4;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+}
+
+.receipt-header { text-align: center; padding-bottom: 8px; border-bottom: 1px dashed var(--inv-border); }
+.receipt-company { text-align: center; font-size: 17px; font-weight: 750; color: var(--inv-accent); }
+.receipt-contact { text-align: center; font-size: 10px; }
+.receipt-title { margin-top: 5px; font-size: 12px; font-weight: 700; letter-spacing: 0.12em; }
+.receipt-meta { display: grid; gap: 4px; padding: 8px 0; border-bottom: 1px dashed var(--inv-border); }
+.receipt-meta label { display: grid; grid-template-columns: 78px 1fr; align-items: center; color: var(--inv-text-muted); }
+.receipt-meta .edit-field { color: var(--inv-text); }
+.receipt-items { margin-top: 8px; font-size: 10px; }
+.receipt-items th, .receipt-items td { padding: 4px 2px; }
+.receipt-items .col-drag, .receipt-items .col-action { width: 0; padding: 0; }
+.receipt-items .col-desc { width: 48%; }
+.receipt-items .col-qty { width: 12%; }
+.receipt-items .col-rate, .receipt-items .col-amount { width: 20%; }
+.receipt-items textarea { min-height: 24px; }
+.receipt-totals { margin: 8px 0; padding-top: 6px; border-top: 1px dashed var(--inv-border); }
+.receipt-totals > div { display: flex; justify-content: space-between; gap: 8px; padding: 2px 0; }
+.receipt-totals .receipt-total { margin-top: 4px; padding-top: 6px; border-top: 1px solid var(--inv-border); font-size: 13px; font-weight: 750; color: var(--inv-accent); }
+.receipt-totals .inline-calc-trigger { display: inline-block; width: 34px; padding: 0; text-align: center; }
+.receipt-thanks { margin-top: 8px; text-align: center; font-size: 10px; }
+
+#app.page-a5 { page: invoice-a5; }
+#app.page-a5 .invoice-paper {
+  width: 148mm;
+  max-width: 100%;
+  min-height: 210mm;
+  padding: 12mm;
+  margin: 0 auto;
+}
+
+.hra-receipt {
+  --inv-text: #172b4d;
+  --inv-text-muted: #64748b;
+  --inv-border: #cbd5e1;
+  width: 100%;
+  min-height: 128mm;
+  margin: 0 auto;
+  padding: 10mm;
+  display: flex;
+  flex-direction: column;
+  color: var(--inv-text);
+  background: #fff;
+  border: 1px solid var(--inv-border);
+  border-radius: 5mm;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.7;
+}
+.hra-header { display: flex; justify-content: space-between; gap: 1rem; align-items: flex-start; padding-bottom: 8px; border-bottom: 2px solid #059669; }
+.hra-title { color: #059669; font-size: 20px; font-weight: 800; line-height: 1.25; }
+.hra-subtitle { color: var(--inv-text-muted); font-size: 12px; }
+.hra-meta { min-width: 220px; display: grid; gap: 2px; }
+.hra-meta label { display: grid; grid-template-columns: 86px 1fr; align-items: center; gap: 4px; color: var(--inv-text-muted); font-size: 12px; }
+.hra-meta .edit-field { color: var(--inv-text); font-weight: 700; }
+.hra-statement { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 5px; margin-top: 18px; font-size: 15px; }
+.hra-inline-name { width: auto; min-width: 95px; max-width: 100%; font-weight: 700; }
+.hra-amount { display: inline-flex; align-items: baseline; padding: 0 4px; color: #059669; border-bottom: 1px solid #059669; font-size: 18px; font-weight: 800; }
+.hra-amount .edit-field { width: 96px; color: #059669; font-size: inherit; font-weight: inherit; }
+.hra-words { width: 380px; min-width: 360px; flex: 0 0 380px; font-style: italic; font-weight: 700; }
+.hra-address { flex: 1 1 100%; min-height: 46px; font-weight: 700; }
+.hra-period { width: auto; min-width: 125px; font-weight: 700; background: #f1f5f9; }
+.hra-footer { display: flex; align-items: flex-end; gap: 18px; margin-top: auto; padding-top: 22px; }
+.hra-landlord { flex: 1 1 auto; display: grid; align-content: end; }
+.hra-landlord > .edit-field { font-weight: 800; }
+.hra-landlord label { display: flex; align-items: baseline; gap: 4px; color: var(--inv-text-muted); font-size: 12px; }
+.hra-landlord label .edit-field { width: 120px; color: var(--inv-text); font-weight: 700; }
+.hra-landlord > span { color: #94a3b8; font-size: 12px; }
+.hra-stamp { flex: 0 0 70px; height: 82px; display: grid; place-content: center; border: 1px dashed #94a3b8; border-radius: 4px; color: var(--inv-text-muted); font-size: 10px; line-height: 1.35; text-align: center; }
+.hra-signature { flex: 0 0 150px; text-align: center; font-size: 12px; }
+.hra-signature > div { height: 34px; border-bottom: 1px solid var(--inv-text); }
+.hra-signature strong { display: block; margin-top: 3px; }
+
+@media screen and (max-width: 1000px) {
+  .hra-footer { flex-wrap: wrap; gap: 10px 14px; }
+  .hra-landlord { flex-basis: 100%; }
+  .hra-stamp { flex-basis: 60px; height: 70px; }
+  .hra-signature { flex-basis: 140px; }
+  .hra-words { width: 100%; min-width: 0; flex: 1 1 100%; }
+}
+
+#app.page-hra { page: hra-landscape; }
+#app.page-hra .invoice-paper { width: 210mm; max-width: 100%; min-height: 148mm; padding: 8mm; margin: 0 auto; }
+
 /* Template 1 Layout (Modern Offset) */
 .t1-header {
   display: flex;
@@ -645,6 +743,16 @@ tr:hover .btn-remove-item {
     margin: 0;
   }
 
+  @page invoice-a5 {
+    size: A5 portrait;
+    margin: 0;
+  }
+
+  @page hra-landscape {
+    size: A5 landscape;
+    margin: 0;
+  }
+
   .invoice-paper {
     box-shadow: none !important;
     border: none !important;
@@ -654,6 +762,22 @@ tr:hover .btn-remove-item {
     max-width: 100% !important;
     min-height: auto !important;
   }
+
+  #app.page-a5 .invoice-paper {
+    width: 148mm !important;
+    max-width: 148mm !important;
+    min-height: 210mm !important;
+    padding: 12mm !important;
+  }
+
+  #app.page-hra .invoice-paper {
+    width: 210mm !important;
+    max-width: 210mm !important;
+    min-height: 148mm !important;
+    padding: 6mm !important;
+  }
+
+  .hra-receipt { min-height: 136mm !important; border-radius: 0 !important; box-shadow: none !important; }
 
   .edit-field {
     border: none !important;
